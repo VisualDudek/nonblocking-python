@@ -10,8 +10,8 @@
 
 
 ## takeaway
-- intro, what is `asyncio`, `001`
-- usecase for _result_ arg in `sleep()`, `002`
+- intro, what is `asyncio`, **001**
+- usecase for _result_ arg in `sleep()`, **002**
 - awaited fn. in same sope run SEQUENTIALLY, steps in diff scopes run CONCURRENT, diff. scopes are added into event loop by `asyncio.gather()` 
 ```python
 # Same scope = like standing in a line
@@ -28,7 +28,7 @@ async def different_scopes():
         person3_does_step3()   # Person 3 does their thing
     )
 ```
-- best usecase for _delay_ in `asyncio.sleep()` I can find is Testing and Mocking, e.g. mocking I/O bound db query, `002`
+- best usecase for _delay_ in `asyncio.sleep()` I can find is Testing and Mocking, e.g. mocking I/O bound db query, **002**
 - `asyncio.sleep()` code heredoc, interesting `delay <= 0` branch usecase see below
 ```python
 async def sleep(delay, result=None):
@@ -50,7 +50,8 @@ async def sleep(delay, result=None):
     finally:
         h.cancel()
 ```
-- `__sleep0()` code heredoc,
+- `math.isnan(x)` Return `True` if x is a NaN (not a number), and `False` otherwise.
+- `__sleep0()` code heredoc, usecase avoid hogging the loop in a long-running coroutine, **003**
 ```python
 @types.coroutine
 def __sleep0():
