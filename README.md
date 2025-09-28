@@ -64,3 +64,121 @@ def __sleep0():
     """
     yield
 ```
+
+## Comprehensive Learning Path
+
+### Project Overview
+This educational Python project focuses on **asynchronous programming with asyncio**. It serves as a learning laboratory for understanding non-blocking operations in Python, specifically exploring the differences between `asyncio.sleep()` and `time.sleep()`.
+
+### Architecture and Structure
+
+**Project Structure:**
+```
+/home/m/workspace/labs/nonblocking-python/
+├── 001_asyncio.py          # Basic concurrency introduction
+├── 002_asyncio.py          # Advanced workflow with state management
+├── 003_asyncio_sleep_zero.py # Event loop yielding demonstration
+├── README.md               # Learning notes and takeaways
+├── pyproject.toml          # Modern Python project configuration
+└── .python-version         # Python 3.13 specification
+```
+
+### Technologies and Patterns
+
+**Core Technologies:**
+- **Python 3.13** (latest stable version)
+- **asyncio** (core asynchronous programming library)
+- **dataclasses** (modern Python data structures)
+- **enum** (type-safe enumeration)
+- **uv** (modern Python package manager)
+
+**Design Patterns:**
+1. **Async/Await Pattern** - Basic concurrent execution
+2. **State Machine Pattern** - Workflow state management
+3. **Workflow Orchestration Pattern** - Sequential steps with concurrent workflows
+4. **Cooperative Multitasking** - Event loop yielding with `asyncio.sleep(0)`
+
+### Learning Path by Phase
+
+#### Phase 1: Foundational Level (Weeks 1-2)
+**Focus: Core Async Concepts**
+- Study `001_asyncio.py` example
+- **Key Topics:**
+  - Event loops and how they work
+  - Difference between `asyncio.sleep()` and `time.sleep()`
+  - async/await syntax and semantics
+  - `asyncio.gather()` for concurrent execution
+
+**Practical Exercise:**
+Create timing comparison scripts demonstrating performance differences between synchronous and asynchronous sleep operations.
+
+#### Phase 2: Intermediate Level (Weeks 3-4)
+**Focus: Advanced Asyncio Patterns**
+- Analyze `002_asyncio.py` thoroughly
+- **Key Topics:**
+  - Dataclasses for structured data (`@dataclass`)
+  - Enums for type-safe state management
+  - Error handling in async contexts
+  - Using asyncio.sleep's result parameter for data passing
+
+**Practical Exercise:**
+Extend the workflow example with:
+- Retry mechanism for failed steps
+- Timeout handling
+- Progress reporting with async callbacks
+
+#### Phase 3: Advanced Level (Weeks 5-6)
+**Focus: Event Loop Optimization**
+- Study `003_asyncio_sleep_zero.py`
+- **Key Topics:**
+  - Event loop internals and `__sleep0()` implementation
+  - Cooperative multitasking principles
+  - When and why to use `asyncio.sleep(0)`
+  - Performance implications of blocking the event loop
+
+**Practical Exercise:**
+Create CPU-intensive tasks that properly yield control to other coroutines without blocking the event loop.
+
+#### Phase 4: Expert Level (Weeks 7+)
+**Focus: Production-Ready Applications**
+- **Key Topics:**
+  - asyncio with databases (aiopg, motor, etc.)
+  - Web frameworks (FastAPI, aiohttp)
+  - Testing async code (pytest-asyncio)
+  - Debugging async applications
+  - Memory management in long-running async applications
+
+### Immediate Next Steps
+
+1. **Experiment with existing code:**
+   - Run each example and time execution
+   - Modify delays and observe behavior changes
+   - Add more concurrent tasks to see scaling effects
+
+2. **Code improvements to implement:**
+   - Add comprehensive type hints
+   - Replace print statements with proper logging
+   - Create unit tests with pytest-asyncio
+   - Add error handling and retry mechanisms
+
+3. **Real-world examples to build:**
+   - HTTP client making concurrent API calls
+   - File I/O operations
+   - Database connectivity patterns
+
+### Technologies to Master Next
+
+Based on this foundation:
+1. **FastAPI** - For building async web APIs
+2. **aiohttp** - For async HTTP client/server operations
+3. **SQLAlchemy 2.0** - For async database operations
+4. **pytest-asyncio** - For testing async code
+5. **asyncio debugging tools** - For production troubleshooting
+
+### Key Takeaways for Learning
+
+- Start with basic concurrency concepts and gradually progress to advanced patterns
+- Focus on understanding event loop mechanics before building complex applications
+- Practice with the provided examples to solidify understanding
+- The progression from `001_asyncio.py` → `002_asyncio.py` → `003_asyncio_sleep_zero.py` represents an ideal learning sequence
+- This codebase provides an excellent foundation for mastering Python's asyncio ecosystem
