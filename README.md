@@ -6,7 +6,25 @@
 - why `async/await` style concurrency is oftern considered more popular in Python than `threading`?
 - `asyncio.sleep(delay, result=None)` what are usecases for _result_ arg. ?
 - `@types.coroutine` what it is?
+- "Preemptive Multitasking (Threads/Processes)" vs. "Cooperative Multitasking (Async Python)"
+- czy `asyncio.Lock()` powoduje że corutyny są wykonywane sekwencyjnie?
+- jakie są prymitywy biblioteki `asyncio`?
+- Producer-Consumer za pomocą Eventów? chyba jednak dedykowane jest `.Condition()`
+- Jaka jest różnica pomiędzy `.Event()` vs. `.Condition()` -> Condition combines the functionality of an Event with a Lock.
+- Po co `await` `queue.put()` ???
+- pamiętaj też o kolejkach typu `PriorityQueue` oraz `LifoQueue`
+- `Semaphore` jako Rate Limiting/Resource Allocation, używaj jako context manager
+- Co to jest `asyncio.Protocol`? UUUU ale fajny docstring jest do tego, dziwny sposób deklaracji interface-u.
+- Higher-Level approach to network communication -> StreamReader, StreamWriter
+- co to jest `struct`?
+- `asyncio.TaskGroup()`
+- `asyncio` + `websockets`
+- `pytest-asyncio` package extends `pytest` framework to handle asyncio coroutines.
 
+
+## src
+- https://www.alexisalulema.com/2023/09/18/advanced-asyncio-topics-beyond-the-basics/
+- ??? Book "Python Concurrency with asyncio" by Matthew Fowler
 
 
 ## takeaway
@@ -64,6 +82,12 @@ def __sleep0():
     """
     yield
 ```
+- `asyncio.Lock()` wymusza sekwencyjność **004**, użycie `.Lock()` w formie kontext menagera
+- producer-consumer design, użycie `.Ecent()` **005**
+- w przykładzie **007** nie potrafie wyłuskać wartości dodanej w "Acquires the lock"
+- będąc w scopie `async with condtition:` jest subtelna różnica pomiędzy `await condition.wait()` a `await asyncio.sleep(1)` pierwsze uwalnia internal lock a to drugie nie, ALE musze to sprawdzić.
+
+
 
 ## Comprehensive Learning Path
 
