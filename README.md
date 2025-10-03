@@ -7,7 +7,7 @@
 - usage of `asyncio.sleep(0)` and implementation that alows negative _delay_ arg.
 - why `async/await` style concurrency is oftern considered more popular in Python than `threading`?
 - `asyncio.sleep(delay, result=None)` what are usecases for _result_ arg. ?
-- `@types.coroutine` what it is?
+- `@types.coroutine` what it is? -> `__sleep0()` in `asyncio`
 - "Preemptive Multitasking (Threads/Processes)" vs. "Cooperative Multitasking (Async Python)"
 - czy `asyncio.Lock()` powoduje że corutyny są wykonywane sekwencyjnie?
 - jakie są prymitywy biblioteki `asyncio`?
@@ -36,6 +36,10 @@
   - fork-join
   - active object
   - scheduler pattern
+- `uvloop` faster event loop?
+- high-lvl lifecycle of `asyncio.run()`
+- what other than coroutines can be `await`?
+- each coroutine is a state machine -> pomaga w zrozumieniu całości
 
 
 ## src
@@ -147,7 +151,79 @@ def __sleep0():
 - producer-consumer design, użycie `.Ecent()` **005**
 - w przykładzie **007** nie potrafie wyłuskać wartości dodanej w "Acquires the lock"
 - będąc w scopie `async with condtition:` jest subtelna różnica pomiędzy `await condition.wait()` a `await asyncio.sleep(1)` pierwsze uwalnia internal lock a to drugie nie, ALE musze to sprawdzić.
+- visual lifecycle of `asyncio.run(main())`:
+```txt
+asyncio.run(main())
+    │
+    ├─→ [1] Create new event loop
+    │
+    ├─→ [2] Set as current loop
+    │
+    ├─→ [3] Schedule main() coroutine
+    │       │
+    │       ├─→ Run event loop
+    │       ├─→ Process await statements
+    │       ├─→ Handle task scheduling
+    │       ├─→ Perform I/O operations
+    │       └─→ main() completes
+    │
+    ├─→ [4] Cleanup phase
+    │       ├─→ Cancel remaining tasks
+    │       ├─→ Shutdown async generators
+    │       └─→ Shutdown thread pool
+    │
+    └─→ [5] Close event loop
+```
+- detailed execution lfow:
+```python
+async def fetch_data():
+    print("1. fetch_data: Starting")
+    await asyncio.sleep(1)  # ← SUSPENSION POINT
+    print("4. fetch_data: Finished sleeping")
+    return "data"
 
+async def main():
+    print("0. main: Starting")
+    result = await fetch_data()  # ← SUSPENSION POINT
+    print(f"5. main: Got {result}")
+
+asyncio.run(main())
+```
+execution timeline:
+```txt
+Time  | Thread State          | Event Loop State
+------|----------------------|----------------------------------
+0ms   | main() starts        | Running main()
+      | prints "0. main..."  |
+      |                      |
+1ms   | await fetch_data()   | Suspends main()
+      |                      | Schedules fetch_data()
+      |                      | Runs fetch_data()
+      |                      |
+2ms   | fetch_data starts    | Running fetch_data()
+      | prints "1. fetch..." |
+      |                      |
+3ms   | await sleep(1)       | Suspends fetch_data()
+      |                      | Registers timer for 1 second
+      | ↓ SUSPENDED ↓        | ↓ WAITING ↓
+      |                      |
+...   | [sleeping]           | Event loop can run other tasks
+1003ms|                      | Timer fires!
+      |                      | Resumes fetch_data()
+      |                      |
+1004ms| Resumes after await  | Running fetch_data()
+      | prints "4. fetch..." |
+      | returns "data"       |
+      |                      |
+1005ms|                      | fetch_data() complete
+      |                      | Resumes main()
+      |                      |
+1006ms| Resumes after await  | Running main()
+      | result = "data"      |
+      | prints "5. main..."  |
+      |                      |
+1007ms| main() complete      | Event loop exits
+```
 
 
 ## Comprehensive Learning Path
