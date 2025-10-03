@@ -36,6 +36,7 @@
   - fork-join
   - active object
   - scheduler pattern
+- event-driven arch. EventBus ???
 - `uvloop` faster event loop?
 - high-lvl lifecycle of `asyncio.run()`
 - what other than coroutines can be `await`?
@@ -95,7 +96,7 @@ pysleep(PyTime_t timeout)
 ```
 - intro, what is `asyncio`, **001**
 - usecase for _result_ arg in `sleep()`, **002**
-- awaited fn. in same sope run SEQUENTIALLY, steps in diff scopes run CONCURRENT, diff. scopes are added into event loop by `asyncio.gather()` 
+- awaited fn. in same sope run SEQUENTIALLY, steps in diff scopes run CONCURRENT, diff. scopes are added into event loop by `asyncio.gather()` GOTCHA `await step()` 1. zawiesza coroutyne w której scopie jest 2. wkłada `step()` do event loopa.
 ```python
 # Same scope = like standing in a line
 async def same_scope():
@@ -147,8 +148,10 @@ def __sleep0():
     """
     yield
 ```
+co to jest `Task.__step` ???
 - `asyncio.Lock()` wymusza sekwencyjność **004**, użycie `.Lock()` w formie kontext menagera
-- producer-consumer design, użycie `.Ecent()` **005**
+- producer-consumer design, użycie `.Event()` **005**
+- chyba dla producer-consumer pattern dedykowny jest prymityw `.Condition()`
 - w przykładzie **007** nie potrafie wyłuskać wartości dodanej w "Acquires the lock"
 - będąc w scopie `async with condtition:` jest subtelna różnica pomiędzy `await condition.wait()` a `await asyncio.sleep(1)` pierwsze uwalnia internal lock a to drugie nie, ALE musze to sprawdzić.
 - visual lifecycle of `asyncio.run(main())`:
