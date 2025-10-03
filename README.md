@@ -1,5 +1,7 @@
 # nonblocking-python
 
+## pytania/wątpliwości
+
 - how `asyncio.sleep()` diff from `time.sleep()` and what makes it nonblocking?
 - how both above fn. are implemented? chekc source code.
 - usage of `asyncio.sleep(0)` and implementation that alows negative _delay_ arg.
@@ -28,6 +30,51 @@
 
 
 ## takeaway
+- cpython implementation, `timemodule.c`
+```c
+static PyObject *
+time_sleep(PyObject *self, PyObject *timeout_obj)
+{
+    if (PySys_Audit("time.sleep", "O", timeout_obj) < 0) {
+        return NULL;
+    }
+
+    PyTime_t timeout;
+    if (_PyTime_FromSecondsObject(&timeout, timeout_obj, _PyTime_ROUND_TIMEOUT))
+        return NULL;
+    if (timeout < 0) {
+        PyErr_SetString(PyExc_ValueError,
+                        "sleep length must be non-negative");
+        return NULL;
+    }
+    if (pysleep(timeout) != 0) {
+        return NULL;
+    }
+    Py_RETURN_NONE;
+}
+```
+- ^^^ ciekaw jest implementacja w C fn `pysleep()` uuuu jedno wielkie makro:
+```c
+// time.sleep() implementation.
+// On error, raise an exception and return -1.
+// On success, return 0.
+static int
+pysleep(PyTime_t timeout)
+{
+    assert(timeout >= 0);
+
+#ifndef MS_WINDOWS
+#ifdef HAVE_CLOCK_NANOSLEEP
+    struct timespec timeout_abs;
+#elif defined(HAVE_NANOSLEEP)
+    struct timespec timeout_ts;
+#else
+    struct timeval timeout_tv;
+#endif
+    PyTime_t deadline, monotonic;
+    int err = 0;
+...
+```
 - intro, what is `asyncio`, **001**
 - usecase for _result_ arg in `sleep()`, **002**
 - awaited fn. in same sope run SEQUENTIALLY, steps in diff scopes run CONCURRENT, diff. scopes are added into event loop by `asyncio.gather()` 
