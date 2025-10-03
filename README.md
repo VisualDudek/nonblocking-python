@@ -3,7 +3,7 @@
 ## pytania/wątpliwości
 
 - how `asyncio.sleep()` diff from `time.sleep()` and what makes it nonblocking?
-- how both above fn. are implemented? chekc source code.
+- how both above fn. are implemented? chekc source code. -> cpython implementation
 - usage of `asyncio.sleep(0)` and implementation that alows negative _delay_ arg.
 - why `async/await` style concurrency is oftern considered more popular in Python than `threading`?
 - `asyncio.sleep(delay, result=None)` what are usecases for _result_ arg. ?
@@ -22,6 +22,20 @@
 - `asyncio.TaskGroup()`
 - `asyncio` + `websockets`
 - `pytest-asyncio` package extends `pytest` framework to handle asyncio coroutines.
+- `sched` lib. class which implements a general purpose event scheduler
+- Crucial concurrency design patterns:
+  - prducer-consumer
+  - thread pool/worker pool
+  - pipeline
+  - read-write lock
+  - future/promise pattern
+  - barrier
+  - actor
+  - double-checked locking (singleton)
+  - semapthore/counting semaphore
+  - fork-join
+  - active object
+  - scheduler pattern
 
 
 ## src
